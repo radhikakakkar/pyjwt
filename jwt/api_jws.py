@@ -92,7 +92,10 @@ class PyJWS:
         >>> jws_obj.get_algorithm_by_name("RS256")
         """
         try:
-            return self._algorithms[alg_name]
+            if alg_name.islower():
+                return self._algorithms[alg_name.upper()]
+            else:
+                return self._algorithms[alg_name]
         except KeyError as e:
             if not has_crypto and alg_name in requires_cryptography:
                 raise NotImplementedError(
@@ -294,6 +297,8 @@ class PyJWS:
     ) -> None:
         try:
             alg = header["alg"]
+            if alg.islower():
+                alg.upper()
         except KeyError:
             raise InvalidAlgorithmError("Algorithm not specified")
 
